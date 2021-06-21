@@ -30,11 +30,12 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if is_network_master():
-		global_position += velocity * speed * delta
-	else:
-		rotation = puppet_rotation
-		global_position = puppet_velocity * speed * delta
+	if get_tree().has_network_peer():
+		if is_network_master():
+			global_position += velocity * speed * delta
+		else:
+			rotation = puppet_rotation
+			global_position += puppet_velocity * speed * delta
 	
 func puppet_position_set(new_value):
 	puppet_position = new_value

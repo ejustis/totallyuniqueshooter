@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Fonts/GUNPLAY_.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/Lobby.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Fonts/Font_Gunplay_34.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Scripts/UI.gd" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 20
@@ -84,9 +85,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource( 4 )
 
-[node name="StartGame" type="Button" parent="CanvasLayer"]
+[node name="StartGame" type="Button" parent="UI"]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -103,4 +105,4 @@ __meta__ = {
 
 [connection signal="pressed" from="MultiplayerSetup/UIHolder/JoinButton" to="." method="_on_JoinButton_pressed"]
 [connection signal="pressed" from="MultiplayerSetup/UIHolder/HostButton" to="." method="_on_HostButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/StartGame" to="." method="_on_StartGame_pressed"]
+[connection signal="pressed" from="UI/StartGame" to="." method="_on_StartGame_pressed"]

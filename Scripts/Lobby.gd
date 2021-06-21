@@ -2,16 +2,27 @@ extends Node
 
 var player = load("res://Scenes/Objects/Player.tscn")
 
-onready var start_game = $CanvasLayer/StartGame
+onready var start_game = $UI/StartGame
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	print("Loading Lobby scene")
+	$MultiplayerSetup.show()
+	
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	get_tree().connect("connected_to_server", self, "_connected_to_server")
 	
 	if get_tree().network_peer != null:
-		pass
+		$MultiplayerSetup.hide()
+		var screen_rect = OS.get_window_safe_area()
+		
+		for player in PersistentNodes.get_children():
+			if player.is_in_group("Player"):
+				var spawn_point = Vector2(rand_range(0,  screen_rect.end.x) , rand_range(0,  screen_rect.end.y))
+				player.rpc("update_position", spawn_point)
+				player.rpc("enable")
+				
 	else:
 		start_game.hide()
 		
@@ -32,6 +43,7 @@ func _player_disconnected(id):
 	
 	#Destroy player on disconnect
 	if PersistentNodes.has_node(str(id)):
+		PersistentNodes.get_node(str(id)).username_text_instance.queue_free()
 		PersistentNodes.get_node(str(id)).queue_free()
 
 func _on_HostButton_pressed():
@@ -50,12 +62,12 @@ func _on_JoinButton_pressed():
 	if username != "":
 		Network.current_player_username = username
 		$MultiplayerSetup.hide()
-		$MultiplayerSetup/UIHolder/Username.hide()
+		#$MultiplayerSetup/UIHolder/Username.hide()
 		
 		GlobalUtils.instance_node(load("res://Scenes/Main/ServerBrowser.tscn"), self)
 		
 func _connected_to_server() -> void:
-	yield(get_tree().create_timer(0.1), "timeout")
+	yield(get_tree().create_timer(0.15), "timeout")
 	instance_player(get_tree().get_network_unique_id())
 		
 func instance_player(id) -> void:
@@ -64,8 +76,7 @@ func instance_player(id) -> void:
 	
 	player_instance.name = str(id)
 	player_instance.set_network_master(id)
-	if player_instance.has_node("PlayerName"):
-		player_instance.get_node("PlayerName").get_node("Label").text = str(id)
+	player_instance.username = $MultiplayerSetup/UIHolder/Username.text
 
 func _on_StartGame_pressed():
 	rpc("switch_to_game")

@@ -15,7 +15,8 @@ puppet var puppet_networked_object_name_index = 0 setget puppet_networked_object
 func _ready():
 	get_tree().connect("connected_to_server", self, "_connected_to_server")
 	get_tree().connect("server_disconnected", self, "_server_disconnected")
-
+	get_tree().connect("connection_failed", self, "_connection_failed")
+		
 func create_server(max_players):
 	if max_players <= 1:
 		max_players = MAX_PLAYERS
@@ -30,13 +31,40 @@ func join_server():
 	client = NetworkedMultiplayerENet.new()
 	client.create_client(ip_address, DEFAULT_PORT)
 	get_tree().set_network_peer(client)
-	
+
+func reset_network_connection():
+	if get_tree().has_network_peer():
+		get_tree().network_peer = null
+
 func _connected_to_server():
 	print("Successfully connected to server")
 	
 func _server_disconnected():
 	print("Disconnected from server")
 
+	for child in PersistentNodes.get_children():
+		if child.is_in_group("Net"):
+			child.queue_free()
+	
+	reset_network_connection()
+	
+	if GlobalUtils.ui != null:
+		var prompt = GlobalUtils.instance_node(load("res://Scenes/Gui/SimplePrompt.tscn"), GlobalUtils.ui)
+		prompt.set_text("Disconnected from server")
+
+func _connection_failed():
+	print("onnection to server failed")
+	
+	for child in PersistentNodes.get_children():
+		if child.is_in_group("Net"):
+			child.queue_free()
+	
+	reset_network_connection()
+	
+	if GlobalUtils.ui != null:
+		var prompt = GlobalUtils.instance_node(load("res://Scenes/Gui/SimplePrompt.tscn"), GlobalUtils.ui)
+		prompt.set_text("Disconnected from server")
+		
 func networked_object_name_index_set(new_value):
 	networked_object_name_index = new_value
 	

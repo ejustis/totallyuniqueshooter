@@ -7,6 +7,7 @@
 extents = Vector2( 16, 16 )
 
 [node name="Player" type="KinematicBody2D" groups=[
+"Net",
 "Player",
 ]]
 position = Vector2( 16.2709, 15.8291 )
