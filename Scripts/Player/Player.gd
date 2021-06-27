@@ -13,11 +13,13 @@ var is_reloading = false
 var velocity = Vector2(0, 0)
 var move_speed = walk_speed
 
-var bullet_preload = preload("res://Scenes/Objects/Bullet.tscn")
-var username_preload = preload("res://Scenes/Gui/PlayerName.tscn")
+export var bullet_preload : PackedScene
+export var username_preload : PackedScene
 
 var username setget username_set
 var username_text_instance = null
+
+var damager_collisions = []
 
 puppet var puppet_hp setget puppet_hp_set
 puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
@@ -25,7 +27,6 @@ puppet var puppet_velocity = Vector2()
 puppet var puppet_move_speed = 0
 puppet var puppet_rotation = 0
 puppet var puppet_username setget puppet_username_set
-
 
 onready var tween = $Tween
 onready var sprite = $Sprite
@@ -79,12 +80,15 @@ func _process(delta):
 				rpc("instance_bullet", get_tree().get_network_unique_id())
 				is_reloading = true
 				reload_timer.start()
+				
+			for area in damager_collisions:
+				rpc("hit_by_damager", area.get_parent().get_damage())
+				
 		else:
-			rotation = lerp_angle(rotation, puppet_rotation, delta*8)
+			rotation = GlobalUtils.lerp_angle(rotation, puppet_rotation, delta*8)
 			
 			if not tween.is_active():
 				move_and_slide(puppet_velocity * puppet_move_speed)
-	
 	if hp <= 0:
 		if username_text_instance != null:
 			username_text_instance.visible = false
@@ -120,14 +124,6 @@ func puppet_position_set(new_value) -> void:
 	
 	tween.interpolate_property(self, "global_position", global_position, puppet_position, 0.1)
 	tween.start()
-
-func lerp_angle(from, to, weight):
-	return from + short_angle_dist(from, to) * weight
-	
-func short_angle_dist(from, to):
-	var max_angle = PI * 2
-	var difference = fmod(to - from, max_angle)
-	return fmod(2 * difference, max_angle) - difference
 
 func _on_StaminaBurnTimer_timeout():
 	can_sprint = true
@@ -176,20 +172,29 @@ func puppet_username_set(new_value):
 			username_text_instance.text = puppet_username
 		
 func _on_HitTimer_timeout():
-	modulate = Color(1,1,1,1)
+	# Note good with bloom
+	#modulate = Color(1,1,1,1)
+	pass
 
 func _on_HitBox_area_entered(area):
-	
-	if get_tree().is_network_server():
-		if area.is_in_group("PlayerDamager") and area.get_parent().player_owner != int(name):
-			rpc("hit_by_damager", area.get_parent().damage)
+	if get_tree().has_network_peer():
+		if get_tree().is_network_server():
+			if area.is_in_group("Damager") or area.is_in_group("Enemy"):
+				if not damager_collisions.has(area):
+					damager_collisions.append(area)
+				
+func _on_HitBox_area_exited(area):
+	if get_tree().has_network_peer():
+		if get_tree().is_network_server():
+			if area.is_in_group("Damager") or area.is_in_group("Enemy"):
+				if damager_collisions.has(area):
+					damager_collisions.erase(area)
 			
-			area.get_parent().rpc("destroy")
-
 sync func hit_by_damager(damage):
 	print("I was hit!")
 	hp -= damage
-	modulate = Color(5,5,5,1)
+	# Modulate looks bad with bloom
+	#modulate = Color(5,5,5,1)
 	hit_timer.start()
 
 sync func enable():
@@ -207,6 +212,7 @@ sync func enable():
 		
 	if not GlobalUtils.players_alive.has(self):
 		GlobalUtils.players_alive.append(self)
+		
 sync func destroy():
 	username_text_instance.visible = false
 	visible = false
@@ -222,3 +228,4 @@ func _exit_tree():
 	if get_tree().has_network_peer():
 		if is_network_master():
 			GlobalUtils.player_master = null
+

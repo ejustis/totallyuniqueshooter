@@ -28,7 +28,7 @@ func _ready():
 		
 func _process(delta):
 	if get_tree().network_peer != null:
-		if get_tree().get_network_connected_peers().size() >= 1 and get_tree().is_network_server():
+		if get_tree().is_network_server():
 			start_game.show()
 		else:
 			start_game.hide()
@@ -64,7 +64,7 @@ func _on_JoinButton_pressed():
 		$MultiplayerSetup.hide()
 		#$MultiplayerSetup/UIHolder/Username.hide()
 		
-		GlobalUtils.instance_node(load("res://Scenes/Main/ServerBrowser.tscn"), self)
+		GlobalUtils.instance_node(load("res://Scenes/Main/Lobby/ServerBrowser.tscn"), self)
 		
 func _connected_to_server() -> void:
 	yield(get_tree().create_timer(0.15), "timeout")
@@ -86,4 +86,4 @@ sync func switch_to_game() -> void:
 		if child.is_in_group("Player"):
 			child.update_shoot_mode(true)
 	
-	get_tree().change_scene("res://Scenes/Main/TestWorld.tscn")
+	get_tree().change_scene("res://Scenes/Main/Levels/TestWorld.tscn")

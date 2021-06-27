@@ -40,6 +40,9 @@ func _process(delta):
 func puppet_position_set(new_value):
 	puppet_position = new_value
 	global_position = puppet_position
+	
+func get_damage():
+	return damage
 
 sync func destroy():
 	queue_free()

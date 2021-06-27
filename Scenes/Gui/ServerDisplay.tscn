@@ -1,17 +1,17 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Fonts/Font_Gunplay_34.tres" type="DynamicFont" id=1]
-[ext_resource path="res://Scripts/ServerDisplay.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Fonts/Font_Gunplay_42.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scripts/GUI/ServerDisplay.gd" type="Script" id=2]
 
 [node name="ServerDisplay" type="Label" groups=[
 "ServerDisplay",
 ]]
 anchor_right = 1.0
-margin_right = -200.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 0, 90 )
+margin_right = -242.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 0, 92 )
 custom_fonts/font = ExtResource( 1 )
-text = "N/A : 000.000.000.000"
+text = "N/A - 000.0.0.0"
 align = 1
 valign = 1
 script = ExtResource( 2 )
@@ -23,8 +23,7 @@ __meta__ = {
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -198.0
-margin_right = 2.0
+margin_left = -192.0
 custom_fonts/font = ExtResource( 1 )
 text = "Join"
 __meta__ = {

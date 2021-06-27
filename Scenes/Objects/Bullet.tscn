@@ -4,7 +4,7 @@
 [ext_resource path="res://Scripts/Bullet.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8.01656, 8.01108 )
+extents = Vector2( 16.1546, 41.3248 )
 
 [node name="Bullet" type="Sprite" groups=[
 "Net",
@@ -14,8 +14,9 @@ texture = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="HitBox" type="Area2D" parent="." groups=[
-"PlayerDamager",
+"Bullet",
 ]]
+scale = Vector2( 0.5, 0.2 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="HitBox"]
 shape = SubResource( 1 )
