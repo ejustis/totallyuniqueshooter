@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Fonts/Font_Gunplay_34.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Assets/Fonts/Font_Gunplay_24.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Assets/Fonts/Font_Gunplay_42.tres" type="DynamicFont" id=3]
-[ext_resource path="res://Scripts/ServerBrowser.gd" type="Script" id=4]
-[ext_resource path="res://Scenes/Main/ServerListener.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scripts/GUI/ServerBrowser.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Main/Lobby/ServerListener.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Gui/ServerDisplay.tscn" type="PackedScene" id=6]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Searching"
@@ -30,6 +31,7 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+server_display_scene = ExtResource( 6 )
 
 [node name="BackgroundPanel" type="Panel" parent="."]
 anchor_right = 1.0
@@ -82,7 +84,6 @@ margin_top = -172.5
 margin_right = 166.0
 margin_bottom = -132.5
 custom_fonts/font = ExtResource( 2 )
-text = "127.0.0.1"
 align = 1
 placeholder_text = "Server IP"
 __meta__ = {

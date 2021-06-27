@@ -1,5 +1,7 @@
 extends Control
 
+export var server_display_scene : PackedScene
+
 onready var server_listener = $ServerListener
 onready var server_ip_text = $BackgroundPanel/ServerIP
 onready var server_container = $BackgroundPanel/VBoxContainer
@@ -9,7 +11,7 @@ func _ready():
 	server_container.hide()
 
 func _on_ServerListener_new_server(server_info):
-	var server_node = GlobalUtils.instance_node(load("res://Scenes/Gui/ServerDisplay.tscn"), server_container)
+	var server_node = GlobalUtils.instance_node(server_display_scene, server_container)
 	server_node.text = "%s - %s" % [server_info.ip, server_info.name]
 	server_node.ip_address = str(server_info.ip)
 	

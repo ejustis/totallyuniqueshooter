@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Images/player.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Enemies/Zombie.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/Enemies/Stats.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 17, 17 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 15, 15 )
+
+[node name="KinematicBody2D" type="KinematicBody2D" groups=[
+"Enemy",
+"Net",
+]]
+script = ExtResource( 2 )
+
+[node name="Zombie" type="Sprite" parent="."]
+self_modulate = Color( 0.0705882, 1, 0.345098, 1 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[node name="NewTarget" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[node name="Stats" type="Node" parent="."]
+script = ExtResource( 3 )
+max_health = 50
+walk_speed = 85
+
+[node name="HitBox" type="Area2D" parent="." groups=[
+"Enemy",
+]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[connection signal="timeout" from="NewTarget" to="." method="_on_NewTarget_timeout"]
+[connection signal="killed" from="Stats" to="." method="_on_Stats_killed"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
+[connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
