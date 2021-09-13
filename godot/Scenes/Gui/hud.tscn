@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Fonts/Font_Gunplay_24.tres" type="DynamicFont" id=1]
+
+[node name="Hud" type="CanvasLayer"]
+
+[node name="AmmoHud" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.266667 )
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -240.0
+margin_top = -81.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="AmmoHud"]
+anchor_right = 0.462
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_right = 0.119995
+custom_fonts/font = ExtResource( 1 )
+text = "Ammo:"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AmmoCount" type="Label" parent="AmmoHud"]
+anchor_left = 0.433
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 0.0799942
+custom_fonts/font = ExtResource( 1 )
+text = "0/0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

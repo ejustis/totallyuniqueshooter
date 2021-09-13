@@ -16,7 +16,7 @@ func _ready():
 	stats.cur_health = stats.max_health
 	#last_position = global_position
 	
-func _process(delta):
+func _process(_delta):
 	if get_tree().has_network_peer():
 		if get_tree().is_network_server():
 			var new_target

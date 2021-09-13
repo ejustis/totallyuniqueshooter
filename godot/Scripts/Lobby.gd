@@ -21,16 +21,16 @@ func _ready():
 		if get_tree().is_network_server():
 			Network.reset_for_new_game()
 		
-		for player in PersistentNodes.get_children():
-			if player.is_in_group("Player"):
+		for player_instance in PersistentNodes.get_children():
+			if player_instance.is_in_group("Player"):
 				var spawn_point = Vector2(rand_range(0,  screen_rect.end.x) , rand_range(0,  screen_rect.end.y))
-				player.rpc("update_position", spawn_point)
-				player.rpc("enable")
+				player_instance.rpc("update_position", spawn_point)
+				player_instance.rpc("enable")
 	else:
 		start_game.hide()
 		pending_start.hide()
 		
-func _process(delta):
+func _process(_delta):
 	if get_tree().network_peer != null:
 		if get_tree().is_network_server():
 			start_game.show()

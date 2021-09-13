@@ -9,7 +9,7 @@ export var base_damage = 12
 signal killed
 
 func _ready():
-	var cur_health = max_health
+	cur_health = max_health
 
 func reduce_health(_damage):
 	cur_health -= _damage
