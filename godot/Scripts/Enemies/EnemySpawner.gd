@@ -44,5 +44,5 @@ sync func instance_enemy(id):
 			enemy_instance.name += str(Network.networked_enemy_name_index)
 			enemy_instance.set_network_master(id)
 			
-			Network.networked_enemy_name_index += 1
+			Network.rpc("increment_networked_enemy_count")
 			cur_spawn += 1

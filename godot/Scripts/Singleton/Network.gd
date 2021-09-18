@@ -9,16 +9,16 @@ var client = null
 var ip_address = ""
 var current_player_username = ""
 
-var networked_object_name_index = 0 setget networked_object_name_index_set
-puppet var puppet_networked_object_name_index = 0 setget puppet_networked_object_name_index_set
+var networked_object_name_index = 0
+#puppet var puppet_networked_object_name_index = 0 setget puppet_networked_object_name_index_set
 
-var networked_enemy_name_index = 0 setget networked_enemy_name_index_set
-puppet var puppet_networked_enemy_name_index = 0 setget puppet_networked_enemy_name_index_set
+var networked_enemy_name_index = 0
+#puppet var puppet_networked_enemy_name_index = 0 setget puppet_networked_enemy_name_index_set
 
 func _ready():
-	get_tree().connect("connected_to_server", self, "_connected_to_server")
-	get_tree().connect("server_disconnected", self, "_server_disconnected")
-	get_tree().connect("connection_failed", self, "_connection_failed")
+	var _error = get_tree().connect("connected_to_server", self, "_connected_to_server")
+	_error =  get_tree().connect("server_disconnected", self, "_server_disconnected")
+	_error =  get_tree().connect("connection_failed", self, "_connection_failed")
 		
 func create_server(max_players):
 	if max_players <= 1:
@@ -67,26 +67,33 @@ func _connection_failed():
 		var prompt = GlobalUtils.instance_node(load("res://Scenes/Gui/SimplePrompt.tscn"), GlobalUtils.ui)
 		prompt.set_text("Disconnected from server")
 		
-func networked_object_name_index_set(new_value):
-	networked_object_name_index = new_value
-	
-	if get_tree().is_network_server():
-		rset("puppet_networked_object_name_index", networked_object_name_index)
-	
-func puppet_networked_object_name_index_set(new_value):
-	if not get_tree().is_network_server():
-		networked_object_name_index = new_value
+sync func increment_networked_object_count():
+	networked_object_name_index += 1
 
-func networked_enemy_name_index_set(new_value):
-	networked_enemy_name_index = new_value
-	
-	if get_tree().is_network_server():
-		rset("puppet_networked_enemy_name_index", networked_enemy_name_index)
-	
-func puppet_networked_enemy_name_index_set(new_value):
-	if not get_tree().is_network_server():
-		networked_enemy_name_index = new_value
+sync func increment_networked_enemy_count():
+	networked_enemy_name_index += 1
 
-func reset_for_new_game():
+		
+#func networked_object_name_index_set(new_value):
+#	networked_object_name_index = new_value
+#	
+#	if get_tree().is_network_server():
+#		rpc("puppet_networked_object_name_index_set", networked_object_name_index)
+	
+#func puppet_networked_object_name_index_set(new_value):
+#	if not get_tree().is_network_server():
+#		networked_object_name_index = new_value
+
+#func networked_enemy_name_index_set(new_value):
+#	networked_enemy_name_index = new_value
+	
+#	if get_tree().is_network_server():
+#		rpc("puppet_networked_enemy_name_index_set", networked_enemy_name_index)
+	
+#func puppet_networked_enemy_name_index_set(new_value):
+#	if not get_tree().is_network_server():
+#		networked_enemy_name_index = new_value
+
+sync func reset_for_new_game():
 	networked_object_name_index = 0
 	networked_enemy_name_index = 0

@@ -3,8 +3,8 @@ extends KinematicBody2D
 var hp = 100 setget set_hp
 var walk_speed : int = 350
 var sprint_speed : int = 500
-var max_stamina : int = 60
-var stamina : int = max_stamina
+var max_stamina : float = 60
+var stamina : float = max_stamina
 var can_sprint : bool = true
 
 var can_shoot : bool = false
@@ -35,14 +35,13 @@ onready var tween = $Tween
 onready var sprite = $Sprite
 onready var attack_timer = $AttackTimer
 onready var reload_timer = $ReloadTimer
-onready var bullet_spawn = $BulletSpawn
 onready var hit_timer = $HitTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	hud = GlobalUtils.instance_node(player_hud, PersistentNodes)
 	
-	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
+	var _error = get_tree().connect("network_peer_connected", self, "_network_peer_connected")
 	
 	username_text_instance = GlobalUtils.intance_node_at_location(username_preload, PersistentNodes, global_position)
 	username_text_instance.player_following = self
@@ -105,7 +104,7 @@ func _process(delta):
 			rotation = GlobalUtils.lerp_angle(rotation, puppet_rotation, delta*8)
 			
 			if not tween.is_active():
-				move_and_slide(puppet_velocity * puppet_move_speed) 
+				puppet_velocity = move_and_slide(puppet_velocity * puppet_move_speed) 
 	
 	if hp <= 0:
 		if username_text_instance != null:
@@ -126,18 +125,23 @@ sync func attack(id):
 				is_reloading = true
 				reload_timer.start()
 	
-sync func update_postion(pos):
+sync func update_position(pos):
 	global_position = pos
 	puppet_position = pos
 
+func update_hud_visibility(is_visible):
+	hud.get_child(0).visible = false
+	
+	if get_tree().has_network_peer():
+		if is_network_master():
+			hud.get_child(0).visible = is_visible
+
 func update_shoot_mode(shoot_mode):
 	if not shoot_mode:
-		hud.get_child(0).visible = false
+		update_hud_visibility(false)
 		#Change to no weapon
-		pass
 	else:
-		pass
-		hud.get_child(0).visible = true
+		update_hud_visibility(true)
 		#Change to weapon
 		
 	

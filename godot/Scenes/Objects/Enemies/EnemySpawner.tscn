@@ -3,7 +3,9 @@
 [ext_resource path="res://Scripts/Enemies/EnemySpawner.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Images/player.png" type="Texture" id=2]
 
-[node name="Sprite" type="Sprite"]
+[node name="Sprite" type="Sprite" groups=[
+"Clear",
+]]
 self_modulate = Color( 0.478431, 0.964706, 0.278431, 1 )
 z_index = 100
 texture = ExtResource( 2 )

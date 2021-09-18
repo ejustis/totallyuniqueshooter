@@ -13,4 +13,4 @@ func _on_JoinServer_pressed():
 	Network.join_server()
 
 func _on_GoBack_pressed():
-	get_tree().reload_current_scene()
+	var _error = get_tree().reload_current_scene()

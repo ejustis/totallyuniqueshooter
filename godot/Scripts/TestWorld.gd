@@ -6,7 +6,7 @@ var current_player_for_spawn_location_number = null
 onready var enemy_spawners = $EnemySpawnController
 
 func _ready():
-	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
+	var _error = get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	
 	if get_tree().is_network_server():
 		setup_player_positions()
@@ -45,9 +45,9 @@ func check_for_no_survivors():
 
 sync func return_to_lobby():
 	for child in PersistentNodes.get_children():
-		if child.is_in_group("Enemy"):
+		if child.is_in_group("Clear"):
 			child.queue_free()
 #		else:
 #			child.queue_free()
 	
-	get_tree().change_scene("res://Scenes/Main/Lobby/Lobby.tscn")
+	var _error = get_tree().change_scene("res://Scenes/Main/Lobby/Lobby.tscn")

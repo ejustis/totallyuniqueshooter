@@ -19,8 +19,10 @@ script = ExtResource( 2 )
 [node name="MultiplayerSetup" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 1.5874
-margin_bottom = 1.5874
+margin_left = 1.7818
+margin_top = -1.9762
+margin_right = 1.78174
+margin_bottom = -1.9762
 theme = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false

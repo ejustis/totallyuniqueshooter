@@ -21,6 +21,6 @@ sync func attack(id):
 		bullet_instance.set_network_master(id)
 		bullet_instance.player_rotation = global_rotation
 		bullet_instance.player_owner = id
-		Network.networked_object_name_index += 1
+		Network.rpc("increment_networked_object_count")
 		
 		ammo_count -= 1
