@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Assets/Fonts/GUNPLAY_.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/TestWorld.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Assets/tilesets/proto_set.png" type="Texture" id=7]
 [ext_resource path="res://Scripts/Enemies/EnemySpawner.gd" type="Script" id=8]
 [ext_resource path="res://Scenes/Objects/Enemies/Zombie.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Objects/Pickups/SecondaryAmmoPickup.tscn" type="PackedScene" id=10]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
@@ -178,7 +179,7 @@ script = ExtResource( 6 )
 [node name="SpawnLocations" type="Node" parent="."]
 
 [node name="1" type="Position2D" parent="SpawnLocations"]
-position = Vector2( 1325.26, 1093.2 )
+position = Vector2( 625.26, 483.2 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource( 4 )
@@ -234,6 +235,12 @@ position = Vector2( 312.282, 318.238 )
 
 [node name="3" type="Position2D" parent="EnemySpawnController"]
 position = Vector2( 588.17, 712.286 )
+
+[node name="AmmoPickup" parent="." groups=[
+"Ammo",
+"Pickup",
+] instance=ExtResource( 10 )]
+position = Vector2( 362.188, 872.164 )
 
 [connection signal="timeout" from="GameUI/Control/Winner/WinTimer" to="GameUI/Control/Winner" method="_on_WinTimer_timeout"]
 [connection signal="timeout" from="EnemySpawnController/SpawnTimer" to="EnemySpawnController" method="_on_SpawnTimer_timeout"]

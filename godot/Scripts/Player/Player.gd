@@ -203,13 +203,22 @@ func _on_HitTimer_timeout():
 	# Note good with bloom
 	#modulate = Color(1,1,1,1)
 	pass
-	
 
 func _on_HitBox_area_entered(area):
 	if get_tree().has_network_peer():
 		if area.is_in_group("Damager") or area.is_in_group("Enemy"):
 #			rpc("hit_by_damager", area.get_parent().get_damage())
 			damager_collisions.append(area)
+		elif area.is_in_group("Pickup"):
+			if area.is_in_group("Ammo"):
+				var ammo_count = area.get_parent().get_ammo_amount()
+				match area.get_parent().get_ammo_type():
+					1:
+						$Inventory.primary_ammo += ammo_count
+					2:
+						$Inventory.secondary_ammo += ammo_count
+					3:
+						$Inventory.optional_ammo += ammo_count
 				
 func _on_HitBox_area_exited(area):
 	if get_tree().has_network_peer():
@@ -232,6 +241,7 @@ sync func enable():
 	visible = true
 	$CollisionShape2D.disabled = false
 	$HitBox/CollisionShape2D.disabled = false
+	$Inventory.reset_to_default()
 	
 	if get_tree().has_network_peer():
 		if is_network_master():

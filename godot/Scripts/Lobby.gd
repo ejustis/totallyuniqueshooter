@@ -19,7 +19,7 @@ func _ready():
 		var screen_rect = OS.get_window_safe_area()
 		
 		if get_tree().is_network_server():
-			Network.reset_for_new_game()
+			Network.rpc("reset_for_new_game")
 		
 			for player_instance in PersistentNodes.get_children():
 				if player_instance.is_in_group("Player"):
