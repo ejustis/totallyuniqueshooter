@@ -1,4 +1,4 @@
-extends Sprite
+extends KinematicBody2D
 
 var velocity = Vector2(1, 0)
 var player_rotation
@@ -11,6 +11,7 @@ puppet var puppet_velocity = Vector2(0, 0)
 puppet var puppet_rotation = 0;
 
 onready var initial_position = global_position
+onready var destroyTimer = $DestroyTimer
 
 var player_owner = 0
 
@@ -32,7 +33,11 @@ func _ready():
 func _process(delta):
 	if get_tree().has_network_peer():
 		if is_network_master():
-			global_position += velocity * speed * delta
+			
+			#global_position += velocity * speed * delta
+			var collision = move_and_collide(velocity * speed * delta)
+			if collision != null:
+				destroyTimer.wait_time = 0.1
 		else:
 			rotation = puppet_rotation
 			global_position += puppet_velocity * speed * delta

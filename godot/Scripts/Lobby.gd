@@ -10,27 +10,27 @@ func _ready():
 	print("Loading Lobby scene")
 	$MultiplayerSetup.show()
 	
-	get_tree().connect("network_peer_connected", self, "_player_connected")
-	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
-	get_tree().connect("connected_to_server", self, "_connected_to_server")
+	var _error = get_tree().connect("network_peer_connected", self, "_player_connected")
+	_error = get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
+	_error = get_tree().connect("connected_to_server", self, "_connected_to_server")
 	
 	if get_tree().network_peer != null:
 		$MultiplayerSetup.hide()
 		var screen_rect = OS.get_window_safe_area()
 		
 		if get_tree().is_network_server():
-			Network.reset_for_new_game()
+			Network.rpc("reset_for_new_game")
 		
-		for player in PersistentNodes.get_children():
-			if player.is_in_group("Player"):
-				var spawn_point = Vector2(rand_range(0,  screen_rect.end.x) , rand_range(0,  screen_rect.end.y))
-				player.rpc("update_position", spawn_point)
-				player.rpc("enable")
+			for player_instance in PersistentNodes.get_children():
+				if player_instance.is_in_group("Player"):
+					var spawn_point = Vector2(rand_range(0,  screen_rect.end.x) , rand_range(0,  screen_rect.end.y))
+					player_instance.rpc("update_position", spawn_point)
+					player_instance.rpc("enable")
 	else:
 		start_game.hide()
 		pending_start.hide()
 		
-func _process(delta):
+func _process(_delta):
 	if get_tree().network_peer != null:
 		if get_tree().is_network_server():
 			start_game.show()
@@ -70,7 +70,7 @@ func _on_JoinButton_pressed():
 		$MultiplayerSetup.hide()
 		#$MultiplayerSetup/UIHolder/Username.hide()
 		
-		GlobalUtils.instance_node(load("res://Scenes/Main/Lobby/ServerBrowser.tscn"), self)
+		var _instance = GlobalUtils.instance_node(load("res://Scenes/Main/Lobby/ServerBrowser.tscn"), self)
 		
 func _connected_to_server() -> void:
 	yield(get_tree().create_timer(0.15), "timeout")
@@ -96,4 +96,4 @@ sync func switch_to_game() -> void:
 		if child.is_in_group("Player"):
 			child.update_shoot_mode(true)
 	
-	get_tree().change_scene("res://Scenes/Main/Levels/TestWorld.tscn")
+	var _error = get_tree().change_scene("res://Scenes/Main/Levels/TestWorld.tscn")

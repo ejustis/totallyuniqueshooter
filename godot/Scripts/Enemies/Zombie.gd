@@ -16,7 +16,7 @@ func _ready():
 	stats.cur_health = stats.max_health
 	#last_position = global_position
 	
-func _process(delta):
+func _process(_delta):
 	if get_tree().has_network_peer():
 		if get_tree().is_network_server():
 			var new_target
@@ -48,7 +48,7 @@ func _process(delta):
 				velocity = puppet_position.direction_to(puppet_target_pos).normalized()
 				
 				if not tween.is_active():
-					move_and_slide(velocity * stats.walk_speed)
+					velocity = move_and_slide(velocity * stats.walk_speed)
 
 func _on_NewTarget_timeout():
 	time_to_recalculate = true
@@ -85,7 +85,7 @@ func get_damage():
 	return stats.base_damage
 
 sync func hit_by_damager(damage):
-	print(name + "; Hit for: " + str(damage))
+	#print(name + "; Hit for: " + str(damage))
 	stats.reduce_health(damage)
 
 func _on_NetworkTickRate_timeout():

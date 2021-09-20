@@ -3,10 +3,10 @@ extends Node2D
 var current_spawn_location_instance_number = 1
 var current_player_for_spawn_location_number = null
 
-onready var enemy_spawners = $EnemySpawners
+onready var enemy_spawners = $EnemySpawnController
 
 func _ready():
-	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
+	var _error = get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	
 	if get_tree().is_network_server():
 		setup_player_positions()
@@ -14,7 +14,7 @@ func _ready():
 	if get_tree().is_network_server():
 		activate_spawners()
 		
-func _process(delta):
+func _process(_delta):
 	check_for_no_survivors()
 		
 func setup_player_positions():
@@ -27,9 +27,8 @@ func setup_player_positions():
 					current_player_for_spawn_location_number = player
 					
 func activate_spawners():
-	for spawner in enemy_spawners.get_children():
-		print(spawner)
-		spawner.can_spawn = true
+		print(enemy_spawners)
+		enemy_spawners.can_spawn = true
 
 func _player_disconnected(id):
 	if PersistentNodes.has_node(str(id)):
@@ -46,9 +45,9 @@ func check_for_no_survivors():
 
 sync func return_to_lobby():
 	for child in PersistentNodes.get_children():
-		if child.is_in_group("Enemy"):
+		if child.is_in_group("Clear"):
 			child.queue_free()
 #		else:
 #			child.queue_free()
 	
-	get_tree().change_scene("res://Scenes/Main/Lobby/Lobby.tscn")
+	var _error = get_tree().change_scene("res://Scenes/Main/Lobby/Lobby.tscn")
