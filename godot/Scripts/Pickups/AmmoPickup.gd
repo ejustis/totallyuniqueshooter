@@ -17,5 +17,5 @@ sync func destroy():
 
 func _on_Area2D_area_entered(_area):
 	if get_tree().has_network_peer():
-		if get_tree().is_network_server():
+		if get_tree().is_network_server() and _area.get_parent().is_in_group("Player"):
 			rpc("destroy")
