@@ -1,32 +1,32 @@
 extends KinematicBody2D
 
-var hp = 100 setget set_hp
-var walk_speed = 350
-var sprint_speed = 500
-var max_stamina = 60
-var stamina = max_stamina
-var can_sprint = true
+var hp: int = 100 setget set_hp
+var walk_speed: int = 350
+var sprint_speed: int = 500
+var max_stamina: float = 60
+var stamina: float = max_stamina
+var can_sprint: bool = true
 
-var can_shoot = false
-var is_reloading = false
+var can_shoot: bool = false
+var is_reloading: bool = false
 
-var velocity = Vector2(0, 0)
-var move_speed = walk_speed
+var velocity: Vector2 = Vector2(0, 0)
+var move_speed: int = walk_speed
 
 export var bullet_preload : PackedScene
 export var username_preload : PackedScene
 
-var username setget username_set
+var username: String setget username_set
 var username_text_instance = null
 
-var damager_collisions = []
+var damager_collisions: Array = []
 
-puppet var puppet_hp setget puppet_hp_set
-puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
-puppet var puppet_velocity = Vector2()
-puppet var puppet_move_speed = 0
-puppet var puppet_rotation = 0
-puppet var puppet_username setget puppet_username_set
+puppet var puppet_hp: int setget puppet_hp_set
+puppet var puppet_position: Vector2 = Vector2(0, 0) setget puppet_position_set
+puppet var puppet_velocity: Vector2 = Vector2()
+puppet var puppet_move_speed: int = 0
+puppet var puppet_rotation: float = 0
+puppet var puppet_username: String setget puppet_username_set
 
 onready var tween = $Tween
 onready var sprite = $Sprite
@@ -36,6 +36,7 @@ onready var hit_timer = $HitTimer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+# warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
 	
 	username_text_instance = GlobalUtils.intance_node_at_location(username_preload, PersistentNodes, global_position)
@@ -88,6 +89,7 @@ func _process(delta):
 			rotation = GlobalUtils.lerp_angle(rotation, puppet_rotation, delta*8)
 			
 			if not tween.is_active():
+# warning-ignore:return_value_discarded
 				move_and_slide(puppet_velocity * puppet_move_speed)
 	if hp <= 0:
 		if username_text_instance != null:
@@ -135,10 +137,17 @@ func _network_peer_connected(id):
 func _on_NetworkTickRate_timeout():
 	if get_tree().has_network_peer():
 		if is_network_master():
-			rset_unreliable("puppet_position", global_position)
-			rset_unreliable("puppet_rotation", rotation)
-			rset_unreliable("puppet_move_speed", move_speed)
-			rset_unreliable("puppet_velocity", velocity)
+			rpc("_update_Puppet_State", global_position, rotation, move_speed, velocity)
+#			rset_unreliable("puppet_position", global_position)
+#			rset_unreliable("puppet_rotation", rotation)
+#			rset_unreliable("puppet_move_speed", move_speed)
+#			rset_unreliable("puppet_velocity", velocity)
+
+puppet func _update_Puppet_State(p_pos: Vector2, p_rot: float, p_speed: int, p_vel: Vector2) -> void:
+	puppet_position_set(p_pos)
+	puppet_rotation = p_rot
+	puppet_move_speed = p_speed
+	puppet_velocity = p_vel
 
 func _on_ReloadTimer_timeout():
 	is_reloading = false
