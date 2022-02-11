@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/GUI/PauseMenu.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Fonts/Font_Gunplay_34.tres" type="DynamicFont" id=2]
+
+[node name="PauseMenu" type="Panel"]
+visible = false
+self_modulate = Color( 1, 1, 1, 0.462745 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -265.0
+margin_top = -268.5
+margin_right = 265.0
+margin_bottom = 268.5
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Continue" type="Button" parent="."]
+margin_left = 67.5636
+margin_top = 145.6
+margin_right = 470.564
+margin_bottom = 236.6
+custom_fonts/font = ExtResource( 2 )
+text = "Continue"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Exit" type="Button" parent="."]
+margin_left = 67.5636
+margin_top = 281.016
+margin_right = 470.564
+margin_bottom = 372.016
+custom_fonts/font = ExtResource( 2 )
+text = "Exit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="button_down" from="Continue" to="." method="_on_Continue_button_down"]
+[connection signal="button_down" from="Exit" to="." method="_on_Exit_button_down"]

@@ -19,7 +19,9 @@ func _init():
 
 func _ready():
 	known_servers.clear()
+	listen_for_connections()
 	
+func listen_for_connections():
 	if socket_udp.listen(listen_port) != OK:
 		print("Gameserver LAN service: Error listening on port: " + str(listen_port))
 	else:

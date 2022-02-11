@@ -2,8 +2,7 @@ extends Node
 
 var player_master = null
 var ui = null
-var max_spawned_enemies = 100
-
+var max_spawned_enemies = 10
 var players_alive = []
 
 func intance_node_at_location(node: Object, parent: Object, global_location: Vector2) -> Object:
@@ -31,3 +30,4 @@ func get_current_enemies_spawned():
 			enemies.append(child)
 	
 	return enemies
+

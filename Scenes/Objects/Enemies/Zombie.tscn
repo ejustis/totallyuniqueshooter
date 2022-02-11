@@ -10,10 +10,12 @@ extents = Vector2( 17, 17 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 15, 15 )
 
-[node name="KinematicBody2D" type="KinematicBody2D" groups=[
+[node name="Zombie" type="KinematicBody2D" groups=[
+"Clear",
 "Enemy",
 "Net",
 ]]
+z_index = 100
 script = ExtResource( 2 )
 
 [node name="Zombie" type="Sprite" parent="."]
@@ -41,7 +43,13 @@ shape = SubResource( 1 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
 
+[node name="Tween" type="Tween" parent="."]
+
+[node name="NetworkTickRate" type="Timer" parent="."]
+wait_time = 0.03
+autostart = true
+
 [connection signal="timeout" from="NewTarget" to="." method="_on_NewTarget_timeout"]
 [connection signal="killed" from="Stats" to="." method="_on_Stats_killed"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
-[connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
+[connection signal="timeout" from="NetworkTickRate" to="." method="_on_NetworkTickRate_timeout"]

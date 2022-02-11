@@ -3,9 +3,8 @@
 [ext_resource path="res://Assets/Fonts/Font_Gunplay_24.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/GUI/PlayerName.gd" type="Script" id=2]
 
-[node name="PlayerName" type="Node2D" groups=[
-"Net",
-]]
+[node name="PlayerName" type="Node2D" groups=["Net"]]
+z_index = 101
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]

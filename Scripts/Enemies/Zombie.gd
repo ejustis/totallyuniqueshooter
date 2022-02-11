@@ -5,16 +5,18 @@ var target = null
 var time_to_recalculate = true
 #var last_position = Vector2()
 
-var puppet_target setget puppet_target_set
-var puppet_position setget puppet_position_set
+puppet var puppet_target_pos setget puppet_target_pos_set
+puppet var puppet_position setget puppet_position_set
+puppet var puppet_velocity setget puppet_velocity_set
 
 onready var stats = $Stats
+onready var tween = $Tween
 
 func _ready():
 	stats.cur_health = stats.max_health
 	#last_position = global_position
 	
-func _process(delta):
+func _process(_delta):
 	if get_tree().has_network_peer():
 		if get_tree().is_network_server():
 			var new_target
@@ -28,28 +30,25 @@ func _process(delta):
 						closest_distance = distance_to_next_player
 				
 				target = new_target
-				rpc("puppet_target", new_target)
 				
 				time_to_recalculate = false
 				$NewTarget.stop()
 				$NewTarget.start()
 			else:
-				rpc("puppet_position", global_position)
-		
-func _physics_process(delta):
-	if target != null:
-		if get_tree().has_network_peer():
-			if get_tree().is_network_server():
 				#TODO: make smooth turn
 				look_at(target.global_position)
 				velocity = global_position.direction_to(target.global_position).normalized()
 				
 				velocity = velocity * stats.walk_speed
 				velocity = move_and_slide(velocity)
-			else:
-				look_at(puppet_target.global_position)
-				global_position = puppet_position
-			
+		else:
+			if puppet_position != null and puppet_target_pos != null:
+				look_at(puppet_target_pos)
+
+				velocity = puppet_position.direction_to(puppet_target_pos).normalized()
+				
+				if not tween.is_active():
+					velocity = move_and_slide(velocity * stats.walk_speed)
 
 func _on_NewTarget_timeout():
 	time_to_recalculate = true
@@ -60,23 +59,38 @@ sync func destroy():
 func _on_Stats_killed():
 	destroy() # Replace with function body.
 
-func puppet_target_set(new_target):
-	puppet_target = new_target
+func puppet_target_pos_set(new_target_pos):
+	puppet_target_pos = new_target_pos
+	#target = new_target
 	
 func puppet_position_set(pos):
 	puppet_position = pos
+	
+	tween.interpolate_property(self, "global_position", global_position, puppet_position, 0.1)
+	tween.start()
+
+func puppet_velocity_set(vel):
+	puppet_velocity = vel
 
 func _on_HitBox_area_entered(area):
-	if get_tree().is_network_server():
-		if area.is_in_group("Damager") or area.is_in_group("Bullet"):
-			rpc("hit_by_damager", area.get_parent().get_damage())
-			
-			if area.is_in_group("Bullet"):
-				area.get_parent().rpc("destroy")
+	if get_tree().has_network_peer():
+		if get_tree().is_network_server():
+			if area.is_in_group("Damager") or area.is_in_group("Bullet"):
+				rpc("hit_by_damager", area.get_parent().get_damage())
+				
+				if area.is_in_group("Bullet"):
+					area.get_parent().rpc("destroy")
 				
 func get_damage():
 	return stats.base_damage
 
 sync func hit_by_damager(damage):
-	print(name + "; Hit for: " + str(damage))
+	#print(name + "; Hit for: " + str(damage))
 	stats.reduce_health(damage)
+
+func _on_NetworkTickRate_timeout():
+	if get_tree().has_network_peer():
+		if get_tree().is_network_server():
+			rset_unreliable("puppet_position", global_position)
+			rset_unreliable("puppet_target_pos", target.global_position)
+			rset_unreliable("puppet_velocity", velocity)
