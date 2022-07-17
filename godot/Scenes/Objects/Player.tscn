@@ -11,10 +11,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 16 )
 
-[node name="Player" type="KinematicBody2D" groups=[
-"Net",
-"Player",
-]]
+[node name="Player" type="KinematicBody2D" groups=["Net", "Player"]]
 position = Vector2( 16.2709, 15.8291 )
 z_index = 100
 script = ExtResource( 2 )

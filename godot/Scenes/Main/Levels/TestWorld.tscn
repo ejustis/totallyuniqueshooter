@@ -201,10 +201,10 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -24.0
 margin_bottom = 27.0
-custom_fonts/font = SubResource( 8 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = 6
 custom_constants/shadow_offset_y = 6
+custom_fonts/font = SubResource( 8 )
 text = "Winner Winner Chicken Dinner!"
 align = 1
 valign = 1
@@ -236,10 +236,7 @@ position = Vector2( 312.282, 318.238 )
 [node name="3" type="Position2D" parent="EnemySpawnController"]
 position = Vector2( 588.17, 712.286 )
 
-[node name="AmmoPickup" parent="." groups=[
-"Ammo",
-"Pickup",
-] instance=ExtResource( 10 )]
+[node name="AmmoPickup" parent="." groups=["Ammo", "Pickup"] instance=ExtResource( 10 )]
 position = Vector2( 362.188, 872.164 )
 
 [connection signal="timeout" from="GameUI/Control/Winner/WinTimer" to="GameUI/Control/Winner" method="_on_WinTimer_timeout"]

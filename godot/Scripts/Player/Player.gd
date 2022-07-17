@@ -70,7 +70,7 @@ func _process(delta):
 			print("Hit by " + str(len(damager_collisions)) + " damagers")
 		
 	if get_tree().has_network_peer():
-		if is_network_master() and visible:
+		if is_network_master() and visible and not hud.get_node("PauseMenu").is_paused:
 			var x_input = int(Input.is_action_pressed("Right")) - int(Input.is_action_pressed("Left"))
 			var y_input = int(Input.is_action_pressed("Down")) - int(Input.is_action_pressed("Up"))
 			
@@ -265,6 +265,12 @@ func _exit_tree():
 	if get_tree().has_network_peer():
 		if is_network_master():
 			GlobalUtils.player_master = null
+			
+func exit_current_game():
+	visible = false
+	username_text_instance.queue_free()
+	hud.queue_free()
+	queue_free()
 
 func _on_ReloadTimer_timeout():
 	

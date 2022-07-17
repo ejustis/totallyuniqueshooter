@@ -1,24 +1,18 @@
 extends Control
 
+var is_paused : bool = false setget set_is_paused
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+func _unhandled_input(event):
+	if event.is_action_pressed("ui_cancel") and GlobalUtils.player_master and GlobalUtils.player_master.can_shoot:
+		self.is_paused = !is_paused
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+func set_is_paused(value):
+	is_paused = value
+	visible = is_paused
 
 func _on_Continue_button_down():
-	pass # Replace with function body.
-
+	self.is_paused = false
 
 func _on_Exit_button_down():
-	pass # Replace with function body.
+	GlobalUtils.exit_current_game()
+	self.is_paused = false

@@ -53,7 +53,7 @@ func _server_disconnected():
 		prompt.set_text("Disconnected from server")
 
 func _connection_failed():
-	print("onnection to server failed")
+	print("Connection to server failed")
 	
 	for child in PersistentNodes.get_children():
 		if child.is_in_group("Net"):
