@@ -34,10 +34,6 @@ func get_current_enemies_spawned():
 func exit_current_game():
 	if player_master:
 		player_master.exit_current_game()
+		player_master = null
 		
-		for child in PersistentNodes.get_children():
-			child.queue_free()
-		
-		Network.reset_network_connection()
-		
-		get_tree().change_scene("res://Scenes/Main/Lobby/Lobby.tscn")
+		Network.leave_game()

@@ -69,13 +69,10 @@ func _server_disconnected():
 
 func _connection_failed():
 	print("Connection to server failed")
-<<<<<<< HEAD:godot/Scripts/Singleton/Network.gd
 	
 	for child in PersistentNodes.get_children():
 		if child.is_in_group("Net"):
 			child.queue_free()
-=======
->>>>>>> afb0540719c2559b301960ac1ec182d090f0741b:Scripts/Singleton/Network.gd
 	
 	reset_network_connection()
 	
