@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
-var hp = 100 setget set_hp
+var max_hp = 100
+var hp = max_hp setget set_hp
+
 var walk_speed : int = 350
 var sprint_speed : int = 500
 var max_stamina : float = 60
@@ -104,6 +106,9 @@ func _process(delta):
 			
 			var ammo_hud = hud.get_child(0).find_node("AmmoCount")
 			ammo_hud.text = str($Inventory.get_current_ammo()) + "/" + str($Inventory.get_current_ammo_store())
+			
+			var health_hud = hud.get_child(2).find_node("Health")
+			health_hud.text = str(hp) + "/" + str(max_hp)
 		
 		else:
 			rotation = GlobalUtils.lerp_angle(rotation, puppet_rotation, delta*8)
@@ -137,10 +142,12 @@ sync func update_position(pos):
 
 func update_hud_visibility(is_visible):
 	hud.get_child(0).visible = false
+	hud.get_child(2).visible = false
 	
 	if get_tree().has_network_peer():
 		if is_network_master():
 			hud.get_child(0).visible = is_visible
+			hud.get_child(2).visible = is_visible
 
 func update_shoot_mode(shoot_mode):
 	if not shoot_mode:

@@ -41,3 +41,33 @@ __meta__ = {
 }
 
 [node name="PauseMenu" parent="." instance=ExtResource( 2 )]
+
+[node name="HealthHud" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.266667 )
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -81.0
+margin_right = 240.0
+
+[node name="Label" type="Label" parent="HealthHud"]
+anchor_right = 0.462
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_right = 0.119995
+custom_fonts/font = ExtResource( 1 )
+text = "Health:"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Health" type="Label" parent="HealthHud"]
+anchor_left = 0.433
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 0.0799942
+custom_fonts/font = ExtResource( 1 )
+text = "0/0"
+align = 1
+valign = 1
